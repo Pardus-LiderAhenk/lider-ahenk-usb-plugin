@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+  <!-- ICommand implementation is used to process a task execution -->
+  <service 
+      ref="UsbCommand"
+      interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
+  <bean id="UsbCommand" 
+        class="tr.org.liderahenk.usb.commands.UsbCommand">
+        <property name="pluginDbService" ref="pluginDbService"/>
+        <property name="logService" ref="logService"/>
+        <property name="resultFactory" ref="resultFactory"/>
+  </bean>
+  
+  <!-- IPluginInfo implementation is used to register plugin -->
+  <service 
+      ref="pluginInfoImpl"
+      interface="tr.org.liderahenk.lider.core.api.plugin.IPluginInfo" />
+  <bean id="pluginInfoImpl" class="tr.org.liderahenk.usb.plugininfo.PluginInfoImpl" />
+  
+  <reference id="pluginDbService" interface="tr.org.liderahenk.lider.core.api.persistence.IPluginDbService" />
+  <reference id="logService" interface="tr.org.liderahenk.lider.core.api.log.IOperationLogService" />
+  <reference id="resultFactory" interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory"/>
+</blueprint>
