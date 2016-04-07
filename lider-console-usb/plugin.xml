@@ -76,12 +76,11 @@
 
 		<!-- Add menu command for "profile definition" dialog -->
 		<menuContribution
-      		allPopups="false"
-            locationURI="popup:tr.org.liderahenk.liderconsole.menus.ProfileDefinition?after=additions">
+	            locationURI="menu:tr.org.liderahenk.liderconsole.menus.ProfileDefinition?after=additions">
  				<command
                   commandId="tr.org.liderahenk.liderconsole.commands.UsbProfile"
                   id="tr.org.liderahenk.liderconsole.commands.UsbProfile"
-                  icon="icons/sample.png"
+                  icon="icons/16/usb.png"
                   tooltip="%command.profile">
                   <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
 				  <!-- <visibleWhen>

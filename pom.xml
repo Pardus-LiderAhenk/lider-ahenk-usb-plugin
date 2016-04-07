@@ -42,7 +42,6 @@
 
 	<modules>
 		<module>lider-usb</module>
-		<module>lider-usb-db</module>
 		<module>lider-usb-feature</module>
 		<module>lider-console-usb</module>
 		<module>ahenk-usb</module>

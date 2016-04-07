@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import tr.org.liderahenk.lider.core.api.log.IOperationLogService;
 import tr.org.liderahenk.lider.core.api.persistence.IPluginDbService;
+import tr.org.liderahenk.lider.core.api.rest.requests.ITaskRequest;
 import tr.org.liderahenk.lider.core.api.service.ICommandContext;
 import tr.org.liderahenk.lider.core.api.service.ICommandResult;
 import tr.org.liderahenk.lider.core.api.service.ICommandResultFactory;
 import tr.org.liderahenk.lider.core.api.service.enums.CommandResultStatus;
-import tr.org.liderahenk.lider.core.api.rest.requests.ITaskCommandRequest;
 
 public class UsbCommand extends BaseCommand {
 
@@ -27,7 +27,7 @@ public class UsbCommand extends BaseCommand {
 	public ICommandResult execute(ICommandContext context) {
 		
 		// TODO Modify parameter map before sending it to agent(s).
-		ITaskCommandRequest req = context.getRequest();
+		ITaskRequest req = context.getRequest();
 		Map<String, Object> parameterMap = req.getParameterMap();
 		parameterMap.put("dummy-param", "dummy-param-value");
 		
