@@ -155,7 +155,7 @@
 	<!-- Add extension point contribution for "policy execution" dialogs -->
 	<extension
   		point="tr.org.liderahenk.liderconsole.core.policymenu">
-  		<policyItem label="%command.profile" pluginName="lider-usb" pluginVersion="1.0.0" profileCommandId="tr.org.liderahenk.liderconsole.commands.UsbProfile" />
+  		<policyItem label="%command.profile" pluginName="usb" pluginVersion="1.0.0" profileCommandId="tr.org.liderahenk.liderconsole.commands.UsbProfile" />
   	</extension>
   	
 </plugin>
