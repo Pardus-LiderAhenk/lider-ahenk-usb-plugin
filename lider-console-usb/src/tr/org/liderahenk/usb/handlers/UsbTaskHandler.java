@@ -2,21 +2,24 @@ package tr.org.liderahenk.usb.handlers;
 
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.swt.widgets.Display;
 
 import tr.org.liderahenk.liderconsole.core.handlers.MultipleSelectionHandler;
+import tr.org.liderahenk.usb.dialogs.UsbTaskDialog;
 
-//TODO use MultipleSelectionHandler if this task support multiple LDAP entries/DNs otherwise use SingleSelectionHandler.
-
+/**
+ * Task execution handler for USB plugin.
+ * 
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ *
+ */
 public class UsbTaskHandler extends MultipleSelectionHandler {
-	
-	private Logger logger = LoggerFactory.getLogger(UsbTaskHandler.class);
-	
+
 	@Override
 	public void executeWithDNSet(Set<String> dnSet) {
-		// TODO dnSet contains distinguished names (DN) of the selected LDAP entries.
-		// TODO open a Task dialog here, inside the dialog use TaskUtils to execute it!
+		UsbTaskDialog dialog = new UsbTaskDialog(Display.getDefault().getActiveShell(), dnSet);
+		dialog.create();
+		dialog.open();
 	}
-	
+
 }

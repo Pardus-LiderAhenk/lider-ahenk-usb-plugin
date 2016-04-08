@@ -2,6 +2,7 @@ package tr.org.liderahenk.usb.dialogs;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,24 +12,21 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
-import tr.org.liderahenk.liderconsole.core.dialogs.IProfileDialog;
-import tr.org.liderahenk.liderconsole.core.model.Profile;
+import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
 import tr.org.liderahenk.usb.constants.UsbConstants;
 import tr.org.liderahenk.usb.i18n.Messages;
 import tr.org.liderahenk.usb.utils.UsbUtils;
 
 /**
- * Profile definition dialog for USB plugin.
+ * Task execution dialog for USB plugin.
  * 
  * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
  *
  */
-public class UsbProfileDialog implements IProfileDialog {
-
-	private static final Logger logger = LoggerFactory.getLogger(UsbProfileDialog.class);
+public class UsbTaskDialog extends DefaultTaskDialog {
 
 	private Button btnCheckWebcam;
 	private Combo cmbWebcam;
@@ -43,14 +41,17 @@ public class UsbProfileDialog implements IProfileDialog {
 	private final String[] statusArr = new String[] { "ENABLE", "DISABLE" };
 	private final String[] statusValueArr = new String[] { "1", "0" };
 
-	@Override
-	public void init() {
+	public UsbTaskDialog(Shell parentShell, Set<String> dnSet) {
+		super(parentShell, dnSet);
 	}
 
 	@Override
-	public void createDialogArea(Composite parent, Profile profile) {
+	public String createTitle() {
+		return Messages.getString("USB_MANAGEMENT");
+	}
 
-		logger.debug("Profile recieved: {}", profile != null ? profile.toString() : null);
+	@Override
+	public Control createTaskDialogArea(Composite parent) {
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -78,8 +79,6 @@ public class UsbProfileDialog implements IProfileDialog {
 			}
 		}
 		cmbWebcam.setEnabled(false);
-		selectOption(cmbWebcam, profile != null && profile.getProfileData() != null
-				? profile.getProfileData().get(UsbConstants.PARAMETERS.WEBCAM) : null);
 
 		btnCheckPrinter = new Button(composite, SWT.CHECK);
 		btnCheckPrinter.setText(Messages.getString("PRINTER"));
@@ -104,8 +103,6 @@ public class UsbProfileDialog implements IProfileDialog {
 			}
 		}
 		cmbPrinter.setEnabled(false);
-		selectOption(cmbPrinter, profile != null && profile.getProfileData() != null
-				? profile.getProfileData().get(UsbConstants.PARAMETERS.PRINTER) : null);
 
 		btnCheckStorage = new Button(composite, SWT.CHECK);
 		btnCheckStorage.setText(Messages.getString("STORAGE"));
@@ -130,8 +127,6 @@ public class UsbProfileDialog implements IProfileDialog {
 			}
 		}
 		cmbStorage.setEnabled(false);
-		selectOption(cmbStorage, profile != null && profile.getProfileData() != null
-				? profile.getProfileData().get(UsbConstants.PARAMETERS.STORAGE) : null);
 
 		btnCheckMouseKeyboard = new Button(composite, SWT.CHECK);
 		btnCheckMouseKeyboard.setText(Messages.getString("MOUSE_KEYBOARD"));
@@ -156,51 +151,46 @@ public class UsbProfileDialog implements IProfileDialog {
 			}
 		}
 		cmbMouseKeyboard.setEnabled(false);
-		selectOption(cmbMouseKeyboard, profile != null && profile.getProfileData() != null
-				? profile.getProfileData().get(UsbConstants.PARAMETERS.MOUSE_KEYBOARD) : null);
+
+		return null;
 	}
 
 	@Override
-	public Map<String, Object> getProfileData() throws Exception {
-		Map<String, Object> profileData = new HashMap<String, Object>();
-		if (btnCheckWebcam.getSelection()) {
-			profileData.put(UsbConstants.PARAMETERS.WEBCAM, UsbUtils.getSelectedValue(cmbWebcam));
-		}
-		if (btnCheckPrinter.getSelection()) {
-			profileData.put(UsbConstants.PARAMETERS.PRINTER, UsbUtils.getSelectedValue(cmbPrinter));
-		}
-		if (btnCheckStorage.getSelection()) {
-			profileData.put(UsbConstants.PARAMETERS.STORAGE, UsbUtils.getSelectedValue(cmbStorage));
-		}
-		if (btnCheckMouseKeyboard.getSelection()) {
-			profileData.put(UsbConstants.PARAMETERS.MOUSE_KEYBOARD, UsbUtils.getSelectedValue(cmbMouseKeyboard));
-		}
-		return profileData;
+	public boolean validateBeforeExecution() {
+		return true;
 	}
 
-	/**
-	 * If the provided value is not null and matches one of the combo options,
-	 * the matching option will be selected. Otherwise first option will be
-	 * selected by default.
-	 * 
-	 * @param combo
-	 * @param value
-	 */
-	private void selectOption(Combo combo, Object value) {
-		if (value == null) {
-			return;
+	@Override
+	public Map<String, Object> getParameterMap() {
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		if (btnCheckWebcam.getSelection()) {
+			parameterMap.put(UsbConstants.PARAMETERS.WEBCAM, UsbUtils.getSelectedValue(cmbWebcam));
 		}
-		boolean isSelected = false;
-		for (int i = 0; i < statusValueArr.length; i++) {
-			if (statusValueArr[i].equalsIgnoreCase(value.toString())) {
-				combo.select(i);
-				isSelected = true;
-				break;
-			}
+		if (btnCheckPrinter.getSelection()) {
+			parameterMap.put(UsbConstants.PARAMETERS.PRINTER, UsbUtils.getSelectedValue(cmbPrinter));
 		}
-		if (!isSelected) {
-			combo.select(0); // select first option by default.
+		if (btnCheckStorage.getSelection()) {
+			parameterMap.put(UsbConstants.PARAMETERS.STORAGE, UsbUtils.getSelectedValue(cmbStorage));
 		}
+		if (btnCheckMouseKeyboard.getSelection()) {
+			parameterMap.put(UsbConstants.PARAMETERS.MOUSE_KEYBOARD, UsbUtils.getSelectedValue(cmbMouseKeyboard));
+		}
+		return parameterMap;
+	}
+
+	@Override
+	public String getCommandId() {
+		return "RUN";
+	}
+
+	@Override
+	public String getPluginName() {
+		return UsbConstants.PLUGIN_NAME;
+	}
+
+	@Override
+	public String getPluginVersion() {
+		return UsbConstants.PLUGIN_VERSION;
 	}
 
 }
