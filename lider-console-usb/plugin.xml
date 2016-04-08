@@ -119,6 +119,7 @@
  				<command
                   commandId="tr.org.liderahenk.liderconsole.commands.UsbTask"
                   id="tr.org.liderahenk.liderconsole.commands.UsbTask"
+                  icon="icons/16/usb.png"
                   tooltip="%command.task">
                   <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
 				  <!-- <visibleWhen>
