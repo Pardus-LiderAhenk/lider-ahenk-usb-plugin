@@ -7,8 +7,6 @@
       interface="tr.org.liderahenk.lider.core.api.plugin.ICommand" />
   <bean id="UsbCommand" 
         class="tr.org.liderahenk.usb.commands.UsbCommand">
-        <property name="pluginDbService" ref="pluginDbService"/>
-        <property name="logService" ref="logService"/>
         <property name="resultFactory" ref="resultFactory"/>
   </bean>
   
@@ -18,7 +16,5 @@
       interface="tr.org.liderahenk.lider.core.api.plugin.IPluginInfo" />
   <bean id="pluginInfoImpl" class="tr.org.liderahenk.usb.plugininfo.PluginInfoImpl" />
   
-  <reference id="pluginDbService" interface="tr.org.liderahenk.lider.core.api.persistence.IPluginDbService" />
-  <reference id="logService" interface="tr.org.liderahenk.lider.core.api.log.IOperationLogService" />
   <reference id="resultFactory" interface="tr.org.liderahenk.lider.core.api.service.ICommandResultFactory"/>
 </blueprint>
