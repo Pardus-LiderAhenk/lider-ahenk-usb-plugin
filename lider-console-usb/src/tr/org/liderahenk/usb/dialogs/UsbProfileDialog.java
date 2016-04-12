@@ -1,8 +1,18 @@
 package tr.org.liderahenk.usb.dialogs;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -11,13 +21,20 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tr.org.liderahenk.liderconsole.core.constants.LiderConstants;
 import tr.org.liderahenk.liderconsole.core.dialogs.IProfileDialog;
 import tr.org.liderahenk.liderconsole.core.model.Profile;
+import tr.org.liderahenk.liderconsole.core.utils.SWTResourceManager;
+import tr.org.liderahenk.liderconsole.core.widgets.Notifier;
 import tr.org.liderahenk.usb.constants.UsbConstants;
 import tr.org.liderahenk.usb.i18n.Messages;
+import tr.org.liderahenk.usb.model.BlacklistWhitelistItem;
 import tr.org.liderahenk.usb.utils.UsbUtils;
 
 /**
@@ -30,6 +47,7 @@ public class UsbProfileDialog implements IProfileDialog {
 
 	private static final Logger logger = LoggerFactory.getLogger(UsbProfileDialog.class);
 
+	// Widgets
 	private Button btnCheckWebcam;
 	private Combo cmbWebcam;
 	private Button btnCheckPrinter;
@@ -38,6 +56,15 @@ public class UsbProfileDialog implements IProfileDialog {
 	private Combo cmbStorage;
 	private Button btnCheckMouseKeyboard;
 	private Combo cmbMouseKeyboard;
+	private Button btnCheckTable;
+	private Composite tableComposite;
+	private Button btnBlackList;
+	private Button btnWhiteList;
+	private Button btnAddListItem;
+	private Button btnEditListItem;
+	private Button btnDeleteListItem;
+	private TableViewer tableViewer;
+	private BlacklistWhitelistItem item;
 
 	// Combo values & i18n labels
 	private final String[] statusArr = new String[] { "ENABLE", "DISABLE" };
@@ -49,8 +76,18 @@ public class UsbProfileDialog implements IProfileDialog {
 
 	@Override
 	public void createDialogArea(Composite parent, Profile profile) {
-
 		logger.debug("Profile recieved: {}", profile != null ? profile.toString() : null);
+		createPeripheralDeviceInputs(parent, profile);
+		createTableArea(parent);
+	}
+
+	/**
+	 * Create input widgets for peripheral devices
+	 * 
+	 * @param composite
+	 * @param profile
+	 */
+	private void createPeripheralDeviceInputs(final Composite parent, final Profile profile) {
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -160,6 +197,240 @@ public class UsbProfileDialog implements IProfileDialog {
 				? profile.getProfileData().get(UsbConstants.PARAMETERS.MOUSE_KEYBOARD) : null);
 	}
 
+	/**
+	 * Create blacklist/whitelist table area
+	 * 
+	 * @param parent
+	 */
+	private void createTableArea(Composite parent) {
+
+		btnCheckTable = new Button(parent, SWT.CHECK);
+		btnCheckTable.setText(Messages.getString("WHITELIST_BLACKLIST_TABLE"));
+		btnCheckTable.setSelection(true);
+		btnCheckTable.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableComposite.setVisible(btnCheckTable.getSelection());
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		// Table composite contains all table-related widgets and table itself!
+		tableComposite = new Composite(parent, SWT.BORDER);
+		tableComposite.setLayout(new GridLayout(1, false));
+
+		// Radio buttons for blacklist/whitelist types
+		Composite tableTypeComposite = new Composite(tableComposite, SWT.NONE);
+		tableTypeComposite.setLayout(new GridLayout(2, true));
+
+		btnWhiteList = new Button(tableTypeComposite, SWT.RADIO);
+		btnWhiteList.setText(Messages.getString("USE_WHITELIST"));
+		btnWhiteList.setSelection(true);
+
+		btnBlackList = new Button(tableTypeComposite, SWT.RADIO);
+		btnBlackList.setText(Messages.getString("USE_BLACKLIST"));
+
+		createButtons(tableComposite);
+		createTable(tableComposite);
+	}
+
+	/**
+	 * Create add, edit, delete buttons for the table
+	 * 
+	 * @param parent
+	 */
+	private void createButtons(final Composite parent) {
+		final Composite tableButtonComposite = new Composite(parent, SWT.NONE);
+		tableButtonComposite.setLayout(new GridLayout(3, false));
+
+		btnAddListItem = new Button(tableButtonComposite, SWT.NONE);
+		btnAddListItem.setText(Messages.getString("ADD"));
+		btnAddListItem.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		btnAddListItem.setImage(
+				SWTResourceManager.getImage(LiderConstants.PLUGIN_IDS.LIDER_CONSOLE_CORE, "icons/16/add.png"));
+		btnAddListItem.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				BlacklistWhitelistItemDialog dialog = new BlacklistWhitelistItemDialog(
+						Display.getDefault().getActiveShell(), tableViewer);
+				dialog.create();
+				dialog.open();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		btnEditListItem = new Button(tableButtonComposite, SWT.NONE);
+		btnEditListItem.setText(Messages.getString("EDIT"));
+		btnEditListItem.setImage(
+				SWTResourceManager.getImage(LiderConstants.PLUGIN_IDS.LIDER_CONSOLE_CORE, "icons/16/edit.png"));
+		btnEditListItem.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		btnEditListItem.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (null == getItem()) {
+					Notifier.warning(null, Messages.getString("PLEASE_SELECT_ITEM"));
+					return;
+				}
+				BlacklistWhitelistItemDialog dialog = new BlacklistWhitelistItemDialog(tableButtonComposite.getShell(),
+						getItem(), tableViewer);
+				dialog.open();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		btnDeleteListItem = new Button(tableButtonComposite, SWT.NONE);
+		btnDeleteListItem.setText(Messages.getString("DELETE"));
+		btnDeleteListItem.setImage(
+				SWTResourceManager.getImage(LiderConstants.PLUGIN_IDS.LIDER_CONSOLE_CORE, "icons/16/delete.png"));
+		btnDeleteListItem.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		btnDeleteListItem.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (null == getItem()) {
+					Notifier.warning(null, Messages.getString("PLEASE_SELECT_ITEM"));
+					return;
+				}
+				@SuppressWarnings("unchecked")
+				List<BlacklistWhitelistItem> items = (List<BlacklistWhitelistItem>) tableViewer.getInput();
+				items.remove(tableViewer.getTable().getSelectionIndex());
+				tableViewer.setInput(items);
+				tableViewer.refresh();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+	}
+
+	/**
+	 * Create table
+	 * 
+	 * @param parent
+	 */
+	private void createTable(final Composite parent) {
+		GridData dataSearchGrid = new GridData();
+		dataSearchGrid.grabExcessHorizontalSpace = true;
+		dataSearchGrid.horizontalAlignment = GridData.FILL;
+
+		tableViewer = new TableViewer(parent,
+				SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+
+		// Create table columns
+		createTableColumns();
+
+		// Configure table layout
+		final Table table = tableViewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.getVerticalBar().setEnabled(true);
+		table.getVerticalBar().setVisible(true);
+		tableViewer.setContentProvider(new ArrayContentProvider());
+
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 3;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.heightHint = 140;
+		gridData.horizontalAlignment = GridData.FILL;
+		tableViewer.getControl().setLayoutData(gridData);
+
+		// Hook up listeners
+		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+				Object firstElement = selection.getFirstElement();
+				firstElement = (BlacklistWhitelistItem) firstElement;
+				if (firstElement instanceof BlacklistWhitelistItem) {
+					setItem((BlacklistWhitelistItem) firstElement);
+				}
+				btnEditListItem.setEnabled(true);
+				btnDeleteListItem.setEnabled(true);
+			}
+		});
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				BlacklistWhitelistItemDialog dialog = new BlacklistWhitelistItemDialog(parent.getShell(), getItem(),
+						tableViewer);
+				dialog.open();
+			}
+		});
+	}
+
+	/**
+	 * Create table columns related to blacklist/whitelist items.
+	 * 
+	 */
+	private void createTableColumns() {
+
+		String[] titles = { Messages.getString("VENDOR"), Messages.getString("MODEL"),
+				Messages.getString("SERIAL_NUMBER") };
+		int[] bounds = { 200, 200, 200 };
+
+		TableViewerColumn vendorColumn = createTableViewerColumn(titles[0], bounds[0]);
+		vendorColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof BlacklistWhitelistItem) {
+					return ((BlacklistWhitelistItem) element).getVendor();
+				}
+				return Messages.getString("UNTITLED");
+			}
+		});
+
+		TableViewerColumn modelColumn = createTableViewerColumn(titles[1], bounds[1]);
+		modelColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof BlacklistWhitelistItem) {
+					return ((BlacklistWhitelistItem) element).getModel();
+				}
+				return Messages.getString("UNTITLED");
+			}
+		});
+
+		TableViewerColumn serialNumberColumn = createTableViewerColumn(titles[2], bounds[2]);
+		serialNumberColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof BlacklistWhitelistItem) {
+					return ((BlacklistWhitelistItem) element).getSerialNumber();
+				}
+				return Messages.getString("UNTITLED");
+			}
+		});
+	}
+
+	/**
+	 * Create new table viewer column instance.
+	 * 
+	 * @param title
+	 * @param bound
+	 * @return
+	 */
+	private TableViewerColumn createTableViewerColumn(String title, int bound) {
+		final TableViewerColumn viewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+		final TableColumn column = viewerColumn.getColumn();
+		column.setText(title);
+		column.setWidth(bound);
+		column.setResizable(true);
+		column.setMoveable(false);
+		column.setAlignment(SWT.LEFT);
+		return viewerColumn;
+	}
+
 	@Override
 	public Map<String, Object> getProfileData() throws Exception {
 		Map<String, Object> profileData = new HashMap<String, Object>();
@@ -175,6 +446,9 @@ public class UsbProfileDialog implements IProfileDialog {
 		if (btnCheckMouseKeyboard.getSelection()) {
 			profileData.put(UsbConstants.PARAMETERS.MOUSE_KEYBOARD, UsbUtils.getSelectedValue(cmbMouseKeyboard));
 		}
+		// TODO table values!
+		// TODO table values!
+		// TODO table values!
 		return profileData;
 	}
 
@@ -201,6 +475,14 @@ public class UsbProfileDialog implements IProfileDialog {
 		if (!isSelected) {
 			combo.select(0); // select first option by default.
 		}
+	}
+
+	public BlacklistWhitelistItem getItem() {
+		return item;
+	}
+
+	public void setItem(BlacklistWhitelistItem item) {
+		this.item = item;
 	}
 
 }
