@@ -51,6 +51,7 @@
 						<_removeheaders>Import-Service,Export-Service</_removeheaders>
 						<Bundle-SymbolicName>lider-usb</Bundle-SymbolicName>
 						<Bundle-Version>1.0.0</Bundle-Version>
+						<Import-Package>!tr.org.liderahenk.usb.*, *</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
