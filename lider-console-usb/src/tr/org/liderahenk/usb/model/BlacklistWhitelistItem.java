@@ -1,6 +1,16 @@
 package tr.org.liderahenk.usb.model;
 
-public class BlacklistWhitelistItem {
+import java.io.Serializable;
+
+/**
+ * Model class for blacklist/whitelist items.
+ * 
+ * @author <a href="mailto:emre.akkaya@agem.com.tr">Emre Akkaya</a>
+ *
+ */
+public class BlacklistWhitelistItem implements Serializable {
+
+	private static final long serialVersionUID = -1215191189845829199L;
 
 	private String vendor;
 

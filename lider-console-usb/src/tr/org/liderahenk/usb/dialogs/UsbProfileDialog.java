@@ -1,6 +1,8 @@
 package tr.org.liderahenk.usb.dialogs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +80,7 @@ public class UsbProfileDialog implements IProfileDialog {
 	public void createDialogArea(Composite parent, Profile profile) {
 		logger.debug("Profile recieved: {}", profile != null ? profile.toString() : null);
 		createPeripheralDeviceInputs(parent, profile);
-		createTableArea(parent);
+		createTableArea(parent, profile);
 	}
 
 	/**
@@ -114,9 +116,10 @@ public class UsbProfileDialog implements IProfileDialog {
 				cmbWebcam.setData(i + "", statusValueArr[i]);
 			}
 		}
-		cmbWebcam.setEnabled(false);
-		selectOption(cmbWebcam, profile != null && profile.getProfileData() != null
+		boolean isSelected = selectOption(cmbWebcam, profile != null && profile.getProfileData() != null
 				? profile.getProfileData().get(UsbConstants.PARAMETERS.WEBCAM) : null);
+		cmbWebcam.setEnabled(isSelected);
+		btnCheckWebcam.setSelection(isSelected);
 
 		btnCheckPrinter = new Button(composite, SWT.CHECK);
 		btnCheckPrinter.setText(Messages.getString("PRINTER"));
@@ -140,9 +143,10 @@ public class UsbProfileDialog implements IProfileDialog {
 				cmbPrinter.setData(i + "", statusValueArr[i]);
 			}
 		}
-		cmbPrinter.setEnabled(false);
-		selectOption(cmbPrinter, profile != null && profile.getProfileData() != null
+		isSelected = selectOption(cmbPrinter, profile != null && profile.getProfileData() != null
 				? profile.getProfileData().get(UsbConstants.PARAMETERS.PRINTER) : null);
+		cmbPrinter.setEnabled(isSelected);
+		btnCheckPrinter.setSelection(isSelected);
 
 		btnCheckStorage = new Button(composite, SWT.CHECK);
 		btnCheckStorage.setText(Messages.getString("STORAGE"));
@@ -166,9 +170,10 @@ public class UsbProfileDialog implements IProfileDialog {
 				cmbStorage.setData(i + "", statusValueArr[i]);
 			}
 		}
-		cmbStorage.setEnabled(false);
-		selectOption(cmbStorage, profile != null && profile.getProfileData() != null
+		isSelected = selectOption(cmbStorage, profile != null && profile.getProfileData() != null
 				? profile.getProfileData().get(UsbConstants.PARAMETERS.STORAGE) : null);
+		cmbStorage.setEnabled(isSelected);
+		btnCheckStorage.setSelection(isSelected);
 
 		btnCheckMouseKeyboard = new Button(composite, SWT.CHECK);
 		btnCheckMouseKeyboard.setText(Messages.getString("MOUSE_KEYBOARD"));
@@ -192,17 +197,19 @@ public class UsbProfileDialog implements IProfileDialog {
 				cmbMouseKeyboard.setData(i + "", statusValueArr[i]);
 			}
 		}
-		cmbMouseKeyboard.setEnabled(false);
-		selectOption(cmbMouseKeyboard, profile != null && profile.getProfileData() != null
+		isSelected = selectOption(cmbMouseKeyboard, profile != null && profile.getProfileData() != null
 				? profile.getProfileData().get(UsbConstants.PARAMETERS.MOUSE_KEYBOARD) : null);
+		cmbMouseKeyboard.setEnabled(isSelected);
+		btnCheckMouseKeyboard.setSelection(isSelected);
 	}
 
 	/**
 	 * Create blacklist/whitelist table area
 	 * 
 	 * @param parent
+	 * @param profile
 	 */
-	private void createTableArea(Composite parent) {
+	private void createTableArea(Composite parent, Profile profile) {
 
 		btnCheckTable = new Button(parent, SWT.CHECK);
 		btnCheckTable.setText(Messages.getString("WHITELIST_BLACKLIST_TABLE"));
@@ -217,6 +224,7 @@ public class UsbProfileDialog implements IProfileDialog {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
+		btnCheckTable.setSelection(true);
 
 		// Table composite contains all table-related widgets and table itself!
 		tableComposite = new Composite(parent, SWT.BORDER);
@@ -234,7 +242,7 @@ public class UsbProfileDialog implements IProfileDialog {
 		btnBlackList.setText(Messages.getString("USE_BLACKLIST"));
 
 		createButtons(tableComposite);
-		createTable(tableComposite);
+		createTable(tableComposite, profile);
 	}
 
 	/**
@@ -316,8 +324,9 @@ public class UsbProfileDialog implements IProfileDialog {
 	 * Create table
 	 * 
 	 * @param parent
+	 * @param profile
 	 */
-	private void createTable(final Composite parent) {
+	private void createTable(final Composite parent, Profile profile) {
 		GridData dataSearchGrid = new GridData();
 		dataSearchGrid.grabExcessHorizontalSpace = true;
 		dataSearchGrid.horizontalAlignment = GridData.FILL;
@@ -335,6 +344,23 @@ public class UsbProfileDialog implements IProfileDialog {
 		table.getVerticalBar().setEnabled(true);
 		table.getVerticalBar().setVisible(true);
 		tableViewer.setContentProvider(new ArrayContentProvider());
+
+		if (profile != null && profile.getProfileData() != null
+				&& profile.getProfileData().get(UsbConstants.PARAMETERS.LIST_ITEMS) != null) {
+			@SuppressWarnings("unchecked")
+			ArrayList<LinkedHashMap<String, String>> list = (ArrayList<LinkedHashMap<String, String>>) profile
+					.getProfileData().get(UsbConstants.PARAMETERS.LIST_ITEMS);
+			if (list != null) {
+				List<BlacklistWhitelistItem> items = new ArrayList<BlacklistWhitelistItem>();
+				for (LinkedHashMap<String, String> map : list) {
+					BlacklistWhitelistItem item = new BlacklistWhitelistItem((String) map.get("vendor"),
+							(String) map.get("model"), (String) map.get("serialNumber"));
+					items.add(item);
+				}
+				tableViewer.setInput(items);
+				tableViewer.refresh();
+			}
+		}
 
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
@@ -446,9 +472,16 @@ public class UsbProfileDialog implements IProfileDialog {
 		if (btnCheckMouseKeyboard.getSelection()) {
 			profileData.put(UsbConstants.PARAMETERS.MOUSE_KEYBOARD, UsbUtils.getSelectedValue(cmbMouseKeyboard));
 		}
-		// TODO table values!
-		// TODO table values!
-		// TODO table values!
+		if (btnCheckTable.getSelection()) {
+			// Put list type
+			profileData.put(UsbConstants.PARAMETERS.LIST_TYPE, btnBlackList.getSelection() ? "blacklist" : "whitelist");
+			// Put list items
+			@SuppressWarnings("unchecked")
+			List<BlacklistWhitelistItem> items = (List<BlacklistWhitelistItem>) tableViewer.getInput();
+			if (items != null) {
+				profileData.put(UsbConstants.PARAMETERS.LIST_ITEMS, items);
+			}
+		}
 		return profileData;
 	}
 
@@ -460,21 +493,18 @@ public class UsbProfileDialog implements IProfileDialog {
 	 * @param combo
 	 * @param value
 	 */
-	private void selectOption(Combo combo, Object value) {
+	private boolean selectOption(Combo combo, Object value) {
 		if (value == null) {
-			return;
+			return false;
 		}
-		boolean isSelected = false;
 		for (int i = 0; i < statusValueArr.length; i++) {
 			if (statusValueArr[i].equalsIgnoreCase(value.toString())) {
 				combo.select(i);
-				isSelected = true;
-				break;
+				return true;
 			}
 		}
-		if (!isSelected) {
-			combo.select(0); // select first option by default.
-		}
+		combo.select(0); // select first option by default.
+		return false;
 	}
 
 	public BlacklistWhitelistItem getItem() {

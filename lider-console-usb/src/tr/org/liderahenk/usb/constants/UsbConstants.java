@@ -11,6 +11,8 @@ public class UsbConstants {
 		public static final String PRINTER = "printer";
 		public static final String STORAGE = "storage";
 		public static final String MOUSE_KEYBOARD = "mouseKeyboard";
+		public static final String LIST_TYPE = "type";
+		public static final String LIST_ITEMS = "items";
 	}
 
 }
