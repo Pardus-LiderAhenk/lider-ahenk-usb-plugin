@@ -30,6 +30,8 @@
 		<aries.blueprint.version>1.1.0</aries.blueprint.version>
 		<tycho.version>0.23.0</tycho.version>
 		<geronimo.jpa.version>1.1</geronimo.jpa.version>
+		<maven.resources.plugin.version>2.7</maven.resources.plugin.version>
+		<build.helper.maven.plugin.version>1.10</build.helper.maven.plugin.version>
 	</properties>
 
 	<licenses>

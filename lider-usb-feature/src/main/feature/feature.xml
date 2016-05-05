@@ -29,6 +29,7 @@
 	</feature>
 
 	<feature name="lider-usb-bundles" version="${project.version}">
+		<configfile finalname="/etc/tr.org.liderahenk.usb.cfg">mvn:${groupId}/lider-usb/${project.version}/cfg</configfile>
 		<bundle>mvn:tr.org.liderahenk/lider-usb/${project.version}</bundle>
 	</feature>
 
