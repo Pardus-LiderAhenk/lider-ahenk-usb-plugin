@@ -327,10 +327,6 @@ public class UsbProfileDialog implements IProfileDialog {
 	 * @param profile
 	 */
 	private void createTable(final Composite parent, Profile profile) {
-		GridData dataSearchGrid = new GridData();
-		dataSearchGrid.grabExcessHorizontalSpace = true;
-		dataSearchGrid.horizontalAlignment = GridData.FILL;
-
 		tableViewer = new TableViewer(parent,
 				SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
