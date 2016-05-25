@@ -16,6 +16,7 @@
   	<bean id="UsbCommand" 
         class="tr.org.liderahenk.usb.commands.UsbCommand">
         <property name="resultFactory" ref="resultFactory"/>
+        <property name="pluginInfo" ref="pluginInfoImpl"/>
   	</bean>
   	
 	<!-- IPluginInfo implementation is used to register plugin -->
