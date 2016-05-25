@@ -17,7 +17,7 @@ This documentation **only** covers plugin related topics. To learn about core pr
 
 #### Manual build
 
- run `mvn clean install -DskipTests`.
+* Just run `mvn clean install`.
 
 ## How to Run?
 
