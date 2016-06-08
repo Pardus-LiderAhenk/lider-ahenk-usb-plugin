@@ -152,7 +152,7 @@ public class UsbTaskDialog extends DefaultTaskDialog {
 		}
 		cmbMouseKeyboard.setEnabled(false);
 
-		return null;
+		return composite;
 	}
 
 	@Override
