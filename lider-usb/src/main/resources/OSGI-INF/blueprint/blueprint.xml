@@ -32,10 +32,6 @@
 		<property name="userOriented" value="${plugin.user.oriented}" />
 		<property name="policyPlugin" value="${plugin.policy.plugin}" />
 		<property name="xbased" value="${plugin.x.based}" />
-		<property name="distroHost" value="${plugin.distro.host}" />
-		<property name="distroUsername" value="${plugin.distro.username}" />
-		<property name="distroPassword" value="${plugin.distro.password}" />
-		<property name="distroPath" value="${plugin.distro.path}" />
 	</bean>
   
 	<reference id="resultFactory" 
