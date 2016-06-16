@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import tr.org.liderahenk.liderconsole.core.dialogs.DefaultTaskDialog;
+import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
 import tr.org.liderahenk.usb.constants.UsbConstants;
 import tr.org.liderahenk.usb.i18n.Messages;
 import tr.org.liderahenk.usb.utils.UsbUtils;
@@ -156,8 +157,10 @@ public class UsbTaskDialog extends DefaultTaskDialog {
 	}
 
 	@Override
-	public boolean validateBeforeExecution() {
-		return true;
+	public void validateBeforeExecution() throws ValidationException {
+		// TODO
+		// TODO
+		// TODO
 	}
 
 	@Override

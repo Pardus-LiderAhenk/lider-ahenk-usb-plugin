@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import tr.org.liderahenk.liderconsole.core.constants.LiderConstants;
 import tr.org.liderahenk.liderconsole.core.dialogs.IProfileDialog;
+import tr.org.liderahenk.liderconsole.core.exceptions.ValidationException;
 import tr.org.liderahenk.liderconsole.core.model.Profile;
 import tr.org.liderahenk.liderconsole.core.utils.SWTResourceManager;
 import tr.org.liderahenk.liderconsole.core.widgets.Notifier;
@@ -509,6 +510,12 @@ public class UsbProfileDialog implements IProfileDialog {
 
 	public void setItem(BlacklistWhitelistItem item) {
 		this.item = item;
+	}
+
+	@Override
+	public void validateBeforeSave() throws ValidationException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
