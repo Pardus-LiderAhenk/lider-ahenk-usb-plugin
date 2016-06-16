@@ -3,12 +3,12 @@ Section: unknown
 Priority: optional
 Maintainer: TUBITAK ULAKBIM
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://www.liderahenk.org.tr
 
-Package: usb
+Package: ahenk-usb
 Version: 1.0.0
 Architecture: any
 Depends: python3 (>= 3)
-Description: LiderAhenk ahenk-usb application
- Long Desc
+Description: Lider Ahenk USB plugin
+
