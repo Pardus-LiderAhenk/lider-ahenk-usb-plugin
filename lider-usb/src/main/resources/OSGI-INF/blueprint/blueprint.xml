@@ -31,6 +31,7 @@
 		<property name="machineOriented" value="${plugin.machine.oriented}" />
 		<property name="userOriented" value="${plugin.user.oriented}" />
 		<property name="policyPlugin" value="${plugin.policy.plugin}" />
+		<property name="taskPlugin" value="${plugin.task.plugin}" />
 		<property name="xbased" value="${plugin.x.based}" />
 	</bean>
   
