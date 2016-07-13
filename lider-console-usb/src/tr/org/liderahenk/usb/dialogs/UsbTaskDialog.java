@@ -183,7 +183,7 @@ public class UsbTaskDialog extends DefaultTaskDialog {
 
 	@Override
 	public String getCommandId() {
-		return "RUN";
+		return "MANAGE-USB";
 	}
 
 	@Override

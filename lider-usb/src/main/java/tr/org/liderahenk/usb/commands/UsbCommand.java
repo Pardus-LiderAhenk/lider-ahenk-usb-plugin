@@ -32,7 +32,7 @@ public class UsbCommand implements ICommand {
 
 	@Override
 	public String getCommandId() {
-		return "RUN";
+		return "MANAGE-USB";
 	}
 
 	@Override
