@@ -20,9 +20,9 @@ class Usb(AbstractPlugin):
         if self.has_attr_json(self.parameters, 'items') is True:
             self.items = self.parameters['items']
 
-        self.command_vendor = "grep -l '{0}' /sys/bus/usb/devices/*/manufacturer | grep -o -P '.{{0,}}/.{{0,0}}'"
-        self.command_model = "grep -l '{0}' {1}product"
-        self.command_serial = "grep -l '{0}' {1}serial"
+        self.command_vendor = "grep -lw '{0}' /sys/bus/usb/devices/*/manufacturer | grep -o -P '.{{0,}}/.{{0,0}}'"
+        self.command_model = "grep -lw '{0}' {1}product"
+        self.command_serial = "grep -lw '{0}' {1}serial"
         self.command_authorized = "echo '{0}' > {1}authorized"
 
         self.command_serial_is_exist = 'if test -e {0}serial; then echo "exist"; else echo "not found"; fi'
@@ -107,6 +107,9 @@ class Usb(AbstractPlugin):
             folder_list = str(p_out).split('\n')
             folder_list.pop()
 
+            if p_out == '' and vendor != '':
+                self.logger.debug('[USB] Device has not been found because of vendor. Vendor: {0}'.format(vendor))
+
             if vendor == '':
                 folder_list = []
                 folder_list.append('/sys/bus/usb/devices/*/')
@@ -114,9 +117,16 @@ class Usb(AbstractPlugin):
             for folder in folder_list:
 
                 result_code, p_out, p_err = self.execute(self.command_model.format(model, folder), result=True)
-                if p_out != '':
+
+                if p_out == '' and model != '':
+                    self.logger.debug('[USB] Device model has not been found in this directory. Directory: {0}, Vendor: {1}, Model: {2}'.format(folder, vendor, model))
+
+                else:
                     model_folder_list = str(p_out).split('\n')
                     model_folder_list.pop()
+
+                    if p_out == '':
+                        model_folder_list.append(folder)
 
                     if vendor == '' and model == '':
                         model_folder_list = []
@@ -132,22 +142,29 @@ class Usb(AbstractPlugin):
                         if 'exist' in p_out or model_folder == '/sys/bus/usb/devices/*/':
                             result_code, p_out, p_err = self.execute(self.command_serial.format(serial_number, model_folder),
                                                                      result=True)
-                            if p_out != '':
+                            if p_out == '' and serial_number != '':
+                                self.logger.debug(
+                                    '[USB] Device serial number has not been found in this directory. Directory: {0}, Vendor: {1}, Model: {2}, Serial Number: {3}'.format(model_folder, vendor,
+                                                                                                                 model, serial_number))
+                            else:
                                 serial_folder_list = str(p_out).split('\n')
                                 serial_folder_list.pop()
+
+                                if p_out == '':
+                                    serial_folder_list.append(model_folder)
 
                                 for serial_folder in serial_folder_list:
                                     serial_folder = serial_folder.strip('serial')
                                     if self.parameters['type'] == 'whitelist':
                                         self.execute(self.command_authorized.format('1', serial_folder), result=True)
                                         self.logger.debug(
-                                            '[USB] Enabled the device. Vendor: {0}, Product: {1}, Serial Number: {2}'.format(
-                                                vendor, model, serial_number))
+                                            '[USB] Enabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                                serial_folder, vendor, model, serial_number))
                                     elif self.parameters['type'] == 'blacklist':
                                         self.execute(self.command_authorized.format('0', serial_folder), result=True)
                                         self.logger.debug(
-                                            '[USB] Disabled the device. Vendor: {0}, Product: {1}, Serial Number: {2}'.format(
-                                                vendor, model, serial_number))
+                                            '[USB] Disabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                                serial_folder, vendor, model, serial_number))
 
                         elif 'not found' in p_out:
                             dir = ''
@@ -159,13 +176,13 @@ class Usb(AbstractPlugin):
                             if self.parameters['type'] == 'whitelist':
                                 self.execute(self.command_authorized.format('1', dir), result=True)
                                 self.logger.debug(
-                                    '[USB] Enabled the device. Vendor: {0}, Product: {1}, Serial Number: {2}'.format(
-                                        vendor, model, serial_number))
+                                    '[USB] Enabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                        dir, vendor, model, serial_number))
                             elif self.parameters['type'] == 'blacklist':
                                 self.execute(self.command_authorized.format('0', dir), result=True)
                                 self.logger.debug(
-                                    '[USB] Disabled the device. Vendor: {0}, Product: {1}, Serial Number: {2}'.format(
-                                        vendor, model, serial_number))
+                                    '[USB] Disabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                        dir, vendor, model, serial_number))
 
         self.logger.debug('[USB] Blacklist/Whitelist was created.')
 
