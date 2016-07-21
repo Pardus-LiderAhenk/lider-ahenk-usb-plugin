@@ -95,7 +95,7 @@ public class BlacklistWhitelistItemDialog extends DefaultLiderTitleAreaDialog {
 
 		setReturnCode(OK);
 
-		if (txtVendor.getText().isEmpty() || txtModel.getText().isEmpty() || txtSerialNumber.getText().isEmpty()) {
+		if (txtVendor.getText().isEmpty() && txtModel.getText().isEmpty() && txtSerialNumber.getText().isEmpty()) {
 			Notifier.error(null, Messages.getString("FILL_AT_LEAST_ONE_FIELD"));
 			return;
 		}
