@@ -81,7 +81,7 @@ class ManageUsb(AbstractPlugin):
         except Exception as e:
             self.logger.error('[USB] A problem occured while handling USB task: {0}'.format(str(e)))
             self.context.create_response(code=self.message_code.TASK_ERROR.value,
-                                         message='USB politikası uygulanırken bir hata oluştu: {0}'.format(str(e)))
+                                         message='USB izinleri güncellenirken bir hata oluştu.')
 
 def handle_task(task, context):
     manage = ManageUsb(task, context)

@@ -158,12 +158,12 @@ class Usb(AbstractPlugin):
                                     if self.parameters['type'] == 'whitelist':
                                         self.execute(self.command_authorized.format('1', serial_folder), result=True)
                                         self.logger.debug(
-                                            '[USB] Enabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                            '[USB] Enabled the device. Directory: {0}, Vendor: {1}, Model: {2}, Serial Number: {3}'.format(
                                                 serial_folder, vendor, model, serial_number))
                                     elif self.parameters['type'] == 'blacklist':
                                         self.execute(self.command_authorized.format('0', serial_folder), result=True)
                                         self.logger.debug(
-                                            '[USB] Disabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                            '[USB] Disabled the device. Directory: {0}, Vendor: {1}, Model: {2}, Serial Number: {3}'.format(
                                                 serial_folder, vendor, model, serial_number))
 
                         elif 'not found' in p_out:
@@ -176,12 +176,12 @@ class Usb(AbstractPlugin):
                             if self.parameters['type'] == 'whitelist':
                                 self.execute(self.command_authorized.format('1', dir), result=True)
                                 self.logger.debug(
-                                    '[USB] Enabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                    '[USB] Enabled the device. Directory: {0}, Vendor: {1}, Model: {2}, Serial Number: {3}'.format(
                                         dir, vendor, model, serial_number))
                             elif self.parameters['type'] == 'blacklist':
                                 self.execute(self.command_authorized.format('0', dir), result=True)
                                 self.logger.debug(
-                                    '[USB] Disabled the device. Directory: {0}, Vendor: {1}, Product: {2}, Serial Number: {3}'.format(
+                                    '[USB] Disabled the device. Directory: {0}, Vendor: {1}, Model: {2}, Serial Number: {3}'.format(
                                         dir, vendor, model, serial_number))
 
         self.logger.debug('[USB] Blacklist/Whitelist was created.')
