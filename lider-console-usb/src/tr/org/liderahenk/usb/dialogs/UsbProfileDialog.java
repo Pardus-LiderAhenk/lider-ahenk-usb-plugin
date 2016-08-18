@@ -237,10 +237,25 @@ public class UsbProfileDialog implements IProfileDialog {
 
 		btnWhiteList = new Button(tableTypeComposite, SWT.RADIO);
 		btnWhiteList.setText(Messages.getString("USE_WHITELIST"));
-		btnWhiteList.setSelection(true);
 
 		btnBlackList = new Button(tableTypeComposite, SWT.RADIO);
 		btnBlackList.setText(Messages.getString("USE_BLACKLIST"));
+		
+		if(profile != null && profile.getProfileData() != null){ 
+			if(profile.getProfileData().containsKey(UsbConstants.PARAMETERS.LIST_TYPE)){
+				if(profile.getProfileData().get(UsbConstants.PARAMETERS.LIST_TYPE).equals("whitelist")){
+					btnBlackList.setSelection(false);
+					btnWhiteList.setSelection(true);
+				}else{
+					btnBlackList.setSelection(true);
+					btnWhiteList.setSelection(false);
+				}
+			}else{
+				btnBlackList.setSelection(false);
+				btnWhiteList.setSelection(true);
+			}
+		}
+		
 
 		createButtons(tableComposite);
 		createTable(tableComposite, profile);
