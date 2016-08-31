@@ -5,32 +5,30 @@
 from base.plugin.abstract_plugin import AbstractPlugin
 
 
-class Safe(AbstractPlugin):
+class Init(AbstractPlugin):
     def __init__(self, context):
-        super(Safe, self).__init__()
+        super(Init, self).__init__()
         self.context = context
-        self.username = str(context.get_username())
         self.logger = self.get_logger()
 
         self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
 
-        self.logger.debug('[USB - safe] Parameters were initialized.')
+        self.logger.debug('[USB - INIT] Parameters were initialized.')
 
-
-    def handle_safe_mode(self):
+    def handle_init_mode(self):
         self.execute(self.script.format('ENABLED_webcam.sh'), result=True)
-        self.logger.debug('[USB - safe] Enabled webcam.')
+        self.logger.debug('[USB - INIT] Enabled webcam.')
 
         self.execute(self.script.format('ENABLED_printer.sh'), result=True)
-        self.logger.debug('[USB - safe] Enabled printer.')
+        self.logger.debug('[USB - INIT] Enabled printer.')
 
         self.execute(self.script.format('ENABLED_usbstorage.sh'), result=True)
-        self.logger.debug('[USB - safe] Enabled usb storage.')
+        self.logger.debug('[USB - INIT] Enabled usb storage.')
 
         self.execute(self.script.format('ENABLED_usbhid.sh'), result=True)
-        self.logger.debug('[USB - safe] Enabled usb hid.')
+        self.logger.debug('[USB - INIT] Enabled usb hid.')
 
 
 def handle_mode(context):
-    safe = Safe(context)
-    safe.handle_safe_mode()
+    init = Init(context)
+    init.handle_init_mode()
