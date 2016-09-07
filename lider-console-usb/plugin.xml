@@ -22,53 +22,14 @@
    
    <extension
        point="org.eclipse.ui.handlers">
-
-		<!-- Profile handler -->
        	<handler
             class="tr.org.liderahenk.usb.handlers.UsbProfileHandler"
             commandId="tr.org.liderahenk.liderconsole.commands.UsbProfile">
-           <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
-		   <!-- <enabledWhen>
-				<and>
-		          <with
-		                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.available">
-		             <equals
-		                   value="true">
-		             </equals>
-		          </with>
-				<with
-	                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isAhenkSelected">
-	             	<equals
-		                   value="true">
-		            </equals>
-	          	</with>
-		       </and>
-		    </enabledWhen> -->        
       	</handler>
-      	
-      	<!-- Task handler -->
        <handler
             class="tr.org.liderahenk.usb.handlers.UsbTaskHandler"
             commandId="tr.org.liderahenk.liderconsole.commands.UsbTask">
-           <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
-		   <!-- <enabledWhen>
-				<and>
-		          <with
-		                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.available">
-		             <equals
-		                   value="true">
-		             </equals>
-		          </with>
-				<with
-	                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isAhenkSelected">
-	             	<equals
-		                   value="true">
-		            </equals>
-	          	</with>
-		       </and>
-		    </enabledWhen> -->        
       </handler>
-      
   </extension>
   
   <extension
@@ -82,33 +43,6 @@
                   id="tr.org.liderahenk.liderconsole.commands.UsbProfile"
                   icon="icons/16/usb.png"
                   tooltip="%command.profile">
-                  <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
-				  <!-- <visibleWhen>
-					   <and>
-			                <iterate operator="or">		
-			                	<or>
-							  	<with
-					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isSearchSelected">
-						             <equals
-						                   value="true">
-						             </equals>
-					          	</with>
-					          	<with
-					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isEntrySelected">
-						             <equals
-						                   value="true">
-						             </equals>
-					          	</with>
-					        	</or>
-					        </iterate>
-							<with
-				                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isAhenkSelected">
-				             	<equals
-					                   value="true">
-					            </equals>
-				          	</with>
-					    </and>
-					</visibleWhen> -->               
            		</command>
 		</menuContribution>
       
@@ -121,55 +55,28 @@
                   id="tr.org.liderahenk.liderconsole.commands.UsbTask"
                   icon="icons/16/usb.png"
                   tooltip="%command.task">
-        <visibleWhen>
-           <and>
-              <with
-                    variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.available">
-                 <equals
-                       value="true">
-                 </equals>
-              </with>
-              <with
-                    variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isLdapUserSelected">
-                 <equals
-                       value="false">
-                 </equals>
-              </with>
-              <with
-                    variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isLdapGroupSelected">
-                 <equals
-                       value="false">
-                 </equals>
-              </with>
-           </and>
-        </visibleWhen>
-                  <!-- TODO Uncomment this after updating/fixing LiderSourceProvider -->
-				  <!-- <visibleWhen>
-					   <and>
-			                <iterate operator="or">		
-			                	<or>
-							  	<with
-					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isSearchSelected">
-						             <equals
-						                   value="true">
-						             </equals>
-					          	</with>
-					          	<with
-					                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isEntrySelected">
-						             <equals
-						                   value="true">
-						             </equals>
-					          	</with>
-					        	</or>
-					        </iterate>
-							<with
-				                variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isAhenkSelected">
-				             	<equals
-					                   value="true">
-					            </equals>
-				          	</with>
-					    </and>
-					</visibleWhen> -->               
+			        <visibleWhen>
+			           <and>
+			              <with
+			                    variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.available">
+			                 <equals
+			                       value="true">
+			                 </equals>
+			              </with>
+			              <with
+			                    variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isLdapUserSelected">
+			                 <equals
+			                       value="false">
+			                 </equals>
+			              </with>
+			              <with
+			                    variable="tr.org.liderahenk.liderconsole.core.sourceproviders.main.isLdapGroupSelected">
+			                 <equals
+			                       value="false">
+			                 </equals>
+			              </with>
+			           </and>
+			        </visibleWhen>
            		</command>
 		</menuContribution>
   </extension>
@@ -178,6 +85,13 @@
 	<extension
   		point="tr.org.liderahenk.liderconsole.core.policymenu">
   		<policyItem label="%command.profile" pluginName="usb" pluginVersion="1.0.0" profileCommandId="tr.org.liderahenk.liderconsole.commands.UsbProfile" />
+  	</extension>
+  	
+	<!-- Add extension point contribution for i18n messages -->
+	<extension
+  		point="tr.org.liderahenk.liderconsole.core.i18n">
+  		<task code="MANAGE-USB" label="%command.task" />
+		<plugin name="usb" label="%plugin.label" />
   	</extension>
   	
 </plugin>
