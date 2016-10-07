@@ -4,6 +4,7 @@
 
 from base.plugin.abstract_plugin import AbstractPlugin
 
+
 class ManageUsb(AbstractPlugin):
     def __init__(self, task, context):
         super(AbstractPlugin, self).__init__()
@@ -24,13 +25,13 @@ class ManageUsb(AbstractPlugin):
         if self.has_attr_json(task, 'storage') is True:
             self.storage = self.task['storage']
 
-        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
+        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/1.0.0/scripts/{0}'
 
-        self.logger.debug('[USB] Parameters were initialized.')
+        self.logger.debug('Parameters were initialized.')
 
     def handle_task(self):
         try:
-            self.logger.debug('[USB] Changing permissions...')
+            self.logger.debug('Changing permissions...')
 
             if self.has_attr_json(self.task, 'webcam') is True:
                 if self.webcam == '1':
@@ -38,9 +39,9 @@ class ManageUsb(AbstractPlugin):
                 elif self.webcam == '0':
                     self.execute(self.script.format('DISABLED_webcam.sh'), result=True)
 
-                self.logger.debug('[USB] Applied permission change for parameter "webcam"')
+                self.logger.debug('Applied permission change for parameter "webcam"')
             else:
-                self.logger.debug('[USB] Task has no parameter "webcam"')
+                self.logger.debug('Task has no parameter "webcam"')
 
             if self.has_attr_json(self.task, 'printer') is True:
                 if self.printer == '1':
@@ -48,9 +49,9 @@ class ManageUsb(AbstractPlugin):
                 elif self.printer == '0':
                     self.execute(self.script.format('DISABLED_printer.sh'), result=True)
 
-                self.logger.debug('[USB] Applied permission change for parameter "printer"')
+                self.logger.debug('Applied permission change for parameter "printer"')
             else:
-                self.logger.debug('[USB] Task has no parameter "printer"')
+                self.logger.debug('Task has no parameter "printer"')
 
             if self.has_attr_json(self.task, 'storage') is True:
                 if self.storage == '1':
@@ -58,9 +59,9 @@ class ManageUsb(AbstractPlugin):
                 elif self.storage == '0':
                     self.execute(self.script.format('DISABLED_usbstorage.sh'), result=True)
 
-                self.logger.debug('[USB] Applied permission change for parameter "storage"')
+                self.logger.debug('Applied permission change for parameter "storage"')
             else:
-                self.logger.debug('[USB] Task has no parameter "storage"')
+                self.logger.debug('Task has no parameter "storage"')
 
             if self.has_attr_json(self.task, 'mouseKeyboard') is True:
                 if self.mouse_keyboard == '1':
@@ -68,20 +69,21 @@ class ManageUsb(AbstractPlugin):
                 elif self.mouse_keyboard == '0':
                     self.execute(self.script.format('DISABLED_usbhid.sh'), result=True)
 
-                self.logger.debug('[USB] Applied permission change for parameter "mouseKeyboard"')
+                self.logger.debug('Applied permission change for parameter "mouseKeyboard"')
             else:
-                self.logger.debug('[USB] Task has no parameter "mouseKeyboard"')
+                self.logger.debug('Task has no parameter "mouseKeyboard"')
 
-            self.logger.debug('[USB] Applied permission changes.')
+            self.logger.debug('Applied permission changes.')
 
-            self.logger.info('[USB] USB task is handled successfully')
+            self.logger.info('USB task is handled successfully')
             self.context.create_response(code=self.message_code.TASK_PROCESSED.value,
                                          message='USB izinleri başarıyla güncellendi.')
 
         except Exception as e:
-            self.logger.error('[USB] A problem occured while handling USB task: {0}'.format(str(e)))
+            self.logger.error('A problem occured while handling USB task: {0}'.format(str(e)))
             self.context.create_response(code=self.message_code.TASK_ERROR.value,
                                          message='USB izinleri güncellenirken bir hata oluştu.')
+
 
 def handle_task(task, context):
     manage = ManageUsb(task, context)

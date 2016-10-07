@@ -11,22 +11,22 @@ class Init(AbstractPlugin):
         self.context = context
         self.logger = self.get_logger()
 
-        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
+        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/1.0.0/scripts/{0}'
 
-        self.logger.debug('[USB - INIT] Parameters were initialized.')
+        self.logger.debug('Parameters were initialized.')
 
     def handle_init_mode(self):
         self.execute(self.script.format('ENABLED_webcam.sh'), result=True)
-        self.logger.debug('[USB - INIT] Enabled webcam.')
+        self.logger.debug('Enabled webcam.')
 
         self.execute(self.script.format('ENABLED_printer.sh'), result=True)
-        self.logger.debug('[USB - INIT] Enabled printer.')
+        self.logger.debug('Enabled printer.')
 
         self.execute(self.script.format('ENABLED_usbstorage.sh'), result=True)
-        self.logger.debug('[USB - INIT] Enabled usb storage.')
+        self.logger.debug('Enabled usb storage.')
 
         self.execute(self.script.format('ENABLED_usbhid.sh'), result=True)
-        self.logger.debug('[USB - INIT] Enabled usb hid.')
+        self.logger.debug('Enabled usb hid.')
 
 
 def handle_mode(context):
