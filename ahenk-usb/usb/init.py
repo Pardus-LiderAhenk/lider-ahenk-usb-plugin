@@ -11,7 +11,7 @@ class Init(AbstractPlugin):
         self.context = context
         self.logger = self.get_logger()
 
-        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/1.0.0/scripts/{0}'
+        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
 
         self.logger.debug('Parameters were initialized.')
 

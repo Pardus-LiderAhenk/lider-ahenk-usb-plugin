@@ -25,7 +25,7 @@ class ManageUsb(AbstractPlugin):
         if self.has_attr_json(task, 'storage') is True:
             self.storage = self.task['storage']
 
-        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/1.0.0/scripts/{0}'
+        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
 
         self.logger.debug('Parameters were initialized.')
 

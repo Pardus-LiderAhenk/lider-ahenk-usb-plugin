@@ -16,7 +16,7 @@ class Usb(AbstractPlugin):
         self.message_code = self.get_message_code()
 
         self.parameters = json.loads(self.data)
-        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/1.0.0/scripts/{0}'
+        self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
 
         if self.has_attr_json(self.parameters, 'items') is True:
             self.items = self.parameters['items']
