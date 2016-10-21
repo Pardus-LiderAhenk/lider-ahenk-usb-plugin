@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.DocumentEvent.EventType;
+
+import org.eclipse.e4.ui.workbench.UIEvents.EventTypes;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -214,23 +217,25 @@ public class UsbProfileDialog implements IProfileDialog {
 
 		btnCheckTable = new Button(parent, SWT.CHECK);
 		btnCheckTable.setText(Messages.getString("WHITELIST_BLACKLIST_TABLE"));
-		btnCheckTable.setSelection(true);
+		btnCheckTable.setSelection(false);
 		btnCheckTable.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableComposite.setVisible(btnCheckTable.getSelection());
+				System.out.println(btnCheckTable.getSelection());
+				tableComposite.update();
+				tableComposite.pack(btnCheckTable.getSelection());
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		btnCheckTable.setSelection(true);
-
+		btnCheckTable.setSelection(false);
 		// Table composite contains all table-related widgets and table itself!
 		tableComposite = new Composite(parent, SWT.BORDER);
 		tableComposite.setLayout(new GridLayout(1, false));
-
+		tableComposite.setVisible(false);
 		// Radio buttons for blacklist/whitelist types
 		Composite tableTypeComposite = new Composite(tableComposite, SWT.NONE);
 		tableTypeComposite.setLayout(new GridLayout(2, true));
@@ -243,6 +248,10 @@ public class UsbProfileDialog implements IProfileDialog {
 		
 		if(profile != null && profile.getProfileData() != null){ 
 			if(profile.getProfileData().containsKey(UsbConstants.PARAMETERS.LIST_TYPE)){
+				btnCheckTable.setSelection(true);
+				tableComposite.setVisible(btnCheckTable.getSelection());
+				tableComposite.update();
+				tableComposite.pack(btnCheckTable.getSelection());
 				if(profile.getProfileData().get(UsbConstants.PARAMETERS.LIST_TYPE).equals("whitelist")){
 					btnBlackList.setSelection(false);
 					btnWhiteList.setSelection(true);
@@ -529,8 +538,9 @@ public class UsbProfileDialog implements IProfileDialog {
 
 	@Override
 	public void validateBeforeSave() throws ValidationException {
-		// TODO Auto-generated method stub
-		
+		if(btnCheckTable.getSelection() && (tableViewer == null || tableViewer.getTable() == null || tableViewer.getTable().getItems() == null || tableViewer.getTable().getItemCount() == 0)){
+			btnCheckTable.setSelection(false);
+		}
 	}
 
 }
