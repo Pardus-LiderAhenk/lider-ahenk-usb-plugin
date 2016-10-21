@@ -17,9 +17,8 @@ class Usb(AbstractPlugin):
 
         self.parameters = json.loads(self.data)
         self.script = '/bin/bash ' + self.Ahenk.plugins_path() + 'usb/scripts/{0}'
+        self.items = []
 
-        if self.has_attr_json(self.parameters, 'items') is True:
-            self.items = self.parameters['items']
 
         self.command_vendor = "grep -lw '{0}' /sys/bus/usb/devices/*/manufacturer | grep -o -P '.{{0,}}/.{{0,0}}'"
         self.command_model = "grep -lw '{0}' {1}product"
@@ -35,9 +34,11 @@ class Usb(AbstractPlugin):
             self.logger.debug('Permissions will be applied for profile.')
             self.manage_permissions()
 
-            if self.items:
+            if self.has_attr_json(self.parameters, 'items') is True:
+                self.items = self.parameters['items']
                 self.logger.debug('Blacklist/Whitelist will be created for profile.')
-                self.create_blacklist_whitelist()
+                if self.has_attr_json(self.parameters, 'type') is True:
+                    self.create_blacklist_whitelist()
 
             self.logger.info('USB profile is handled successfully.')
             self.context.create_response(code=self.message_code.POLICY_PROCESSED.value,
