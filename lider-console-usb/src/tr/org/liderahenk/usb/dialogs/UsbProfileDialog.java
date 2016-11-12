@@ -152,33 +152,6 @@ public class UsbProfileDialog implements IProfileDialog {
 		cmbPrinter.setEnabled(isSelected);
 		btnCheckPrinter.setSelection(isSelected);
 
-		btnCheckStorage = new Button(composite, SWT.CHECK);
-		btnCheckStorage.setText(Messages.getString("STORAGE"));
-		btnCheckStorage.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				cmbStorage.setEnabled(btnCheckStorage.getSelection());
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-		cmbStorage = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-		cmbStorage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		for (int i = 0; i < statusArr.length; i++) {
-			String i18n = Messages.getString(statusArr[i]);
-			if (i18n != null && !i18n.isEmpty()) {
-				cmbStorage.add(i18n);
-				cmbStorage.setData(i + "", statusValueArr[i]);
-			}
-		}
-		isSelected = selectOption(cmbStorage, profile != null && profile.getProfileData() != null
-				? profile.getProfileData().get(UsbConstants.PARAMETERS.STORAGE) : null);
-		cmbStorage.setEnabled(isSelected);
-		btnCheckStorage.setSelection(isSelected);
-
 		btnCheckMouseKeyboard = new Button(composite, SWT.CHECK);
 		btnCheckMouseKeyboard.setText(Messages.getString("MOUSE_KEYBOARD"));
 		btnCheckMouseKeyboard.addSelectionListener(new SelectionListener() {
@@ -205,6 +178,39 @@ public class UsbProfileDialog implements IProfileDialog {
 				? profile.getProfileData().get(UsbConstants.PARAMETERS.MOUSE_KEYBOARD) : null);
 		cmbMouseKeyboard.setEnabled(isSelected);
 		btnCheckMouseKeyboard.setSelection(isSelected);
+
+		btnCheckStorage = new Button(composite, SWT.CHECK);
+		btnCheckStorage.setText(Messages.getString("STORAGE"));
+		btnCheckStorage.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnCheckTable.getSelection()){
+					btnCheckTable.setSelection(false);
+					tableComposite.setVisible(false);
+					tableComposite.update();
+					tableComposite.pack();
+				}
+				cmbStorage.setEnabled(btnCheckStorage.getSelection());
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		cmbStorage = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
+		cmbStorage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		for (int i = 0; i < statusArr.length; i++) {
+			String i18n = Messages.getString(statusArr[i]);
+			if (i18n != null && !i18n.isEmpty()) {
+				cmbStorage.add(i18n);
+				cmbStorage.setData(i + "", statusValueArr[i]);
+			}
+		}
+		isSelected = selectOption(cmbStorage, profile != null && profile.getProfileData() != null
+				? profile.getProfileData().get(UsbConstants.PARAMETERS.STORAGE) : null);
+		cmbStorage.setEnabled(isSelected);
+		btnCheckStorage.setSelection(isSelected);
 	}
 
 	/**
@@ -221,8 +227,11 @@ public class UsbProfileDialog implements IProfileDialog {
 		btnCheckTable.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if(cmbStorage.isEnabled()){
+					btnCheckStorage.setSelection(false);
+					cmbStorage.setEnabled(false);
+				}
 				tableComposite.setVisible(btnCheckTable.getSelection());
-				System.out.println(btnCheckTable.getSelection());
 				tableComposite.update();
 				tableComposite.pack(btnCheckTable.getSelection());
 			}
