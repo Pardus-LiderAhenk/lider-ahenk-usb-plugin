@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>tr.org.liderahenk</groupId>
 		<artifactId>usb</artifactId>
-		<version>1.0.0-beta</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>lider-usb-feature</artifactId>
