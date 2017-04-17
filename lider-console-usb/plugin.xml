@@ -94,4 +94,10 @@
 		<plugin name="usb" label="%plugin.label" />
   	</extension>
   	
+  		<extension
+  		point="tr.org.liderahenk.liderconsole.core.taskmenu">
+  		<taskItem label="%command.task" pluginName="usb" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.UsbTask" />
+  	</extension>
+  
+  	
 </plugin>
