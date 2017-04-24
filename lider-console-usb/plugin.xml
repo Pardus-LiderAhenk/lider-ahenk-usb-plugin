@@ -96,7 +96,10 @@
   	
   		<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
-  		<taskItem label="%command.task" pluginName="usb" pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.UsbTask" selectionType="multi" description="USB modülleri ve aygıtları üzerindeki izinleri düzenler.&#xA;USB yönetimi için tıklayınız.." />
+  		<taskItem label="%command.task" pluginName="usb" 
+  		pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.UsbTask" selectionType="multi" 
+  		description="USB modülleri ve aygıtları üzerindeki izinleri düzenler.&#xA;USB yönetimi için tıklayınız.." 
+  		imagePath="usb.png"/>
   	</extension>
   
   	
