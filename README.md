@@ -33,7 +33,7 @@ USB plugin for [Lider Ahenk project](http://www.liderahenk.org.tr).
 
 #### Ahenk
 
-1. Create a soft link for _ahenk-usb/usb_ directory via `sudo ln -s lider-ahenk-usb-plugin/ahenk-usb/usb/ /opt/ahenk/plugins`
+1. Create a soft link for _ahenk-usb/usb_ directory via `sudo ln -s lider-ahenk-usb-plugin/ahenk-usb/usb/ /usr/share/ahenk/plugins`
 
 ## Contribution
 
