@@ -84,7 +84,7 @@
 	<!-- Add extension point contribution for "policy execution" dialogs -->
 	<extension
   		point="tr.org.liderahenk.liderconsole.core.policymenu">
-  		<policyItem label="%command.profile" pluginName="usb" pluginVersion="1.0.0" profileCommandId="tr.org.liderahenk.liderconsole.commands.UsbProfile" />
+  		<policyItem label="%command.profile" pluginName="usb" pluginVersion="1.1" profileCommandId="tr.org.liderahenk.liderconsole.commands.UsbProfile" />
   	</extension>
   	
 	<!-- Add extension point contribution for i18n messages -->
@@ -97,7 +97,7 @@
   		<extension
   		point="tr.org.liderahenk.liderconsole.core.taskmenu">
   		<taskItem label="%command.task" pluginName="usb" 
-  		pluginVersion="1.0.0" taskCommandId="tr.org.liderahenk.liderconsole.commands.UsbTask" selectionType="multi" 
+  		pluginVersion="1.1" taskCommandId="tr.org.liderahenk.liderconsole.commands.UsbTask" selectionType="multi" 
   		description="USB modülleri ve aygıtları üzerindeki izinleri düzenler.&#xA;USB yönetimi için tıklayınız.." 
   		imagePath="usb.png"/>
   	</extension>

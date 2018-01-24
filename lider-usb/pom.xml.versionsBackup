@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>tr.org.liderahenk</groupId>
 		<artifactId>usb</artifactId>
-		<version>1.1</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>lider-usb</artifactId>
@@ -92,7 +92,7 @@
 					<instructions>
 						<_removeheaders>Import-Service,Export-Service</_removeheaders>
 						<Bundle-SymbolicName>lider-usb</Bundle-SymbolicName>
-						<Bundle-Version>1.1</Bundle-Version>
+						<Bundle-Version>1.0.0</Bundle-Version>
 						<Import-Package>!tr.org.liderahenk.usb.*, *</Import-Package>
 					</instructions>
 				</configuration>
